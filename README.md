@@ -7,58 +7,22 @@ Baza danych firmy Airbnb łączy osoby szukające zakwaterowania (goście Airbnb
 
 Dane zostały pobrane ze strony: https://www.kaggle.com/dgomonov/new-york-city-airbnb-open-data
 
-#Czyszczenie środowiska.
-rm(list=ls())
-#Ładuję dane dotyczące wynajmowanych apartamentów w Nowym Jorku.
-wynajmowanie_apartamentow_w_nowym_jorku <- read.csv('C:/Users/Admin/Downloads/Programowanie-Projekty/RStudio/Laboratorium-Zdalnie-Projekt/80997_Żdaniec_Dane.csv')
-#Przypisuję i dzielę dane na dwie grupy dotyczące wynajmowanych apartamentów w dwóch dzielnicach.
-bronx_brooklyn <- wynajmowanie_apartamentow_w_nowym_jorku[wynajmowanie_apartamentow_w_nowym_jorku$neighbourhood_group %in% c('Bronx','Brooklyn'),]
-bronx_queens <- wynajmowanie_apartamentow_w_nowym_jorku[wynajmowanie_apartamentow_w_nowym_jorku$neighbourhood_group %in% c('Bronx','Queens'),]
+![image](https://user-images.githubusercontent.com/79860696/116782058-4a5f5280-aa87-11eb-9328-872afe27ae6a.png)
+
+![image](https://user-images.githubusercontent.com/79860696/116782066-52b78d80-aa87-11eb-9c2e-e2b86a160ac7.png)
+
+![image](https://user-images.githubusercontent.com/79860696/116782071-58ad6e80-aa87-11eb-8451-5bda76a8ef4b.png)
+
 W dalszej częsci korzystam z testu t-studenta i testu Wilcoxon i w dalszej częsci stawiam hipotezy. Dla naszych badań przyjmujemy poziom istotności alfa=0,05:
 
-#Chcę zbadać czy cena pokoju zależy od dzielnicy. 
-# hipoteza zerowa: "Dzielnica nie wpływa na cenę".
-# hipoteza alternatywna: "Dzielnica wpływa na cenę"
+![image](https://user-images.githubusercontent.com/79860696/116782075-619e4000-aa87-11eb-869d-daacc80e64b8.png)
 
-t.test(bronx_brooklyn$price ~ bronx_brooklyn$neighbourhood_group)
-wilcox.test(bronx_brooklyn$price ~ bronx_brooklyn$neighbourhood_group)
-#Hipoteza zerowa odrzucona, ponieważ p-value jest mniejsze niż alfa, zatem przyjmujemy hipoteze alternatywą.
+![image](https://user-images.githubusercontent.com/79860696/116782082-737fe300-aa87-11eb-82eb-53eeddcddafa.png)
 
-t.test(bronx_queens$price  ~ bronx_queens$neighbourhood_group)
-wilcox.test(bronx_queens$price  ~ bronx_queens$neighbourhood_group)
-#Hipoteza zerowa odrzucona, ponieważ p-value jest mniejsze niż alfa, zatem przyjmujemy hipotezę alternatywną.
+![image](https://user-images.githubusercontent.com/79860696/116782089-78449700-aa87-11eb-9e68-343991f07c7d.png)
 
-#Możemy wywnioskować po zastosowaniu dwóch testóW, że dana dzielnica skorelowana z bronx ma wpływ na cene pokoju. 
-#Chcę zbadać czy ilość wystawianych recenzji zależy od dzielnicy.
-#H0:"Dzielnica wpływa na ilość recenzji."
-#H1: "Dzielnica nie wpływa na ilość recenzji".
+![image](https://user-images.githubusercontent.com/79860696/116782094-7da1e180-aa87-11eb-8fc9-cba302abc8fb.png)
 
-t.test(bronx_brooklyn$number_of_reviews  ~ bronx_brooklyn$neighbourhood_group)
-wilcox.test(bronx_brooklyn$number_of_reviews  ~ bronx_brooklyn$neighbourhood_group)
-#Hipoteza zerowa przyjęta, ponieważ p-value jest większe niż alfa.
-
-t.test(bronx_queens$number_of_reviews  ~ bronx_queens$neighbourhood_group)
-wilcox.test(bronx_queens$availability_365  ~ bronx_queens$neighbourhood_group)
-#Hipoteza zerowa przyjęta, ponieważ p-value jest większe niż alfa.
-
-#Wniosek po wykonaniu dwóch testów jest taki, że dzielnica skorelowana z bronx nie wpływa na ilość recenzji.
-#H0:Dzielnica wpływa na dostępność.
-#H1: "Dzielnica nie wpływa na dostępność".  
-
-t.test(bronx_brooklyn$availability_365  ~ bronx_brooklyn$neighbourhood_group)
-wilcox.test(bronx_brooklyn$availability_365  ~ bronx_brooklyn$neighbourhood_group)
-#Hipoteza zerowa odrzucona, ponieważ p-value jest mniejsze niż alfa, zatem występuję hipoteza alternatywna.
-
-t.test(bronx_queens$availability_365  ~ bronx_queens$neighbourhood_group)
-wilcox.test(bronx_queens$number_of_reviews  ~ bronx_queens$neighbourhood_group)
-#Hipoteza zerowa przyjęta, ponieważ p-value jest większe niż alfa.
-
-#W tym przypadku mamy dwie różne występujące hipotezy wyselekcjonowanych danych, co w szerszym rozumieniu nie jest miarodajne. Pierwszy przypadek mówi nam, że dzielnica nie wpływa na dostępność, a drugi,że jednak ma. W pobranej bazie danych te dzielnice były ze sobą skontrastowane. W dalszych badaniach należy postawić sobie pytanie czy wybrane dane mają sens statystyczny.
-#Korzystając z poniższych poleceń można przejrzeć średnie wartości dla wszystkich dzielnic:
-
-tapply(wynajmowanie_apartamentow_w_nowym_jorku$price, wynajmowanie_apartamentow_w_nowym_jorku$neighbourhood_group, mean)
-tapply(wynajmowanie_apartamentow_w_nowym_jorku$number_of_reviews, wynajmowanie_apartamentow_w_nowym_jorku$neighbourhood_group, mean)
-tapply(wynajmowanie_apartamentow_w_nowym_jorku$availability_365, wynajmowanie_apartamentow_w_nowym_jorku$neighbourhood_group, mean)
 Dla każdej dzielnicy zostały policzone średnie dotyczące: ceny wynajmu pokoju, liczba recenzji, dostępność pokoju w ciągu roku. Dane które zostały pobrane zostały wcześniej uśrednione dla poszczególnych lat przez firme, więc okres badany możemy rozpocząc od 2008 roku.
 Zrealizujmy przykładową interpretacje danych dla dzielnicy Bronx. Średnia cena wynajmu pokoju w dzielnicy Bronx wynosi 87,5$, a liczba recenzji dla tej dzielnicy wynosi średnio 26, zaś pokój do wynajęcia średnio jest dostępny 165,7 dnia w roku.
 
